@@ -3,3 +3,17 @@
   = @movie.description
 - if user_signed_in?
   %p= link_to 'Email me details about this movie', send_info_movie_path(@movie), class: 'btn btn-sm btn-default'
+  .container
+    .row
+      %h2 Add comment
+      =form_for @comment do |f|
+        =f.text_area :body, class: "col-sm-12", size: "5x5"
+        =f.hidden_field :movie_id, value: @movie.id
+        =f.hidden_field :user_id, value: current_user.id
+        =f.submit "Comment"
+    .row
+      %h2 Comments
+      -if users_comment = current_user.comments.find_by(movie_id: @movie.id)
+        =button_to "Uncomment", comment_path(users_comment.id), method: :delete
+      %ul
+        =render @comments

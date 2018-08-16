@@ -1,20 +1,23 @@
 class CommentsController < ApplicationController
-
   before_action :require_login, only: :create
 
   def create
-    if Comment.create comment_params
+    comment = Comment.new comment_params
+    if comment.save
       redirect_to movie_path(id: comment_params[:movie_id])
-      flash[:success] = "Comment created succesfully"
+      flash[:success] = "Comment created succesfully."
     else
-      flash.now[:error] = "Something went wrong, comment wasn't created"
+      flash[:error] = "Something went wrong. #{comment.errors.full_messages.join ". "}."
+      redirect_back(fallback_location: root_path)
     end
   end
 
   def destroy
     comment = Comment.find(params[:id])
     if comment_belongs_to_current_user?(comment)
+      flash[:success] = "Uncommented successfully"
       comment.destroy
+      redirect_back(fallback_location: movies_path)
     else
       flash[:error] = "Wrong user"
       redirect_back fallback_location: root_path

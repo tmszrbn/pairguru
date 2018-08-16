@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :comment do
-    movie nil
-    user nil
+    association :movie
+    association :user
+    body { Faker::Lorem.sentence }
   end
 end
