@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'commenters/top_ten'
   devise_for :users
 
   root "home#welcome"
@@ -17,4 +18,5 @@ Rails.application.routes.draw do
   end
 
   resources :comments, only: [:create, :destroy]
+  get "/commenters/top_ten", to: "commenters#top_ten"
 end
