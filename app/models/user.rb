@@ -20,6 +20,12 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
+  scope :top_commenters, -> do select("users.* , count(comments.id) as comments_count")
+                              .left_joins(:comments)
+                              .group("users.id")
+                              .where("comments.created_at > '#{7.days.ago}'")
+  end
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :confirmable
 
